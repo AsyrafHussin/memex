@@ -1,6 +1,6 @@
 {
   "name": "memex",
-  "description": "Lightweight persistent memory for AI coding sessions. Zero dependencies, just markdown files.",
+  "description": "Lightweight persistent memory plugin for Claude Code. Zero dependencies, just markdown.",
   "version": "0.1.0",
   "author": {
     "name": "Asyraf Hussin"

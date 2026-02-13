@@ -4,7 +4,7 @@ Lightweight persistent memory for AI coding sessions. Zero dependencies, just ma
 
 ## The Problem
 
-AI coding assistants (Claude Code, Cursor, Copilot) lose all context when the session resets. You have to re-explain what you were working on every time.
+Claude Code loses all context when the session resets or hits the context limit. You have to re-explain what you were working on every time.
 
 ## The Solution
 
@@ -97,7 +97,6 @@ your-project/
 | Token cost | 500+ per session | ~50 lines |
 | Install | Complex multi-step | One command |
 | Git tracked | No | Yes (travels with repo) |
-| Works with | Claude Code only | Any AI editor |
 | Offline | Needs worker service | Always works |
 
 ## Configuration
