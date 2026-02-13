@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.4] - 2026-02-14
+
+### Fixed
+- PreToolUse hook now detects `git commit` (not just `git push`) and reminds to save memory first
+
 ## [0.2.3] - 2026-02-14
 
 ### Fixed

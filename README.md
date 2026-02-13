@@ -31,7 +31,8 @@ Once installed, memex runs automatically with **no manual steps required**:
 | When | What Happens |
 |------|-------------|
 | Session starts | Reads `memory/latest.md` and restores context |
-| Before `git push` | Intercepts and reminds Claude to save first |
+| Before `git commit` | Reminds Claude to update memory before committing |
+| Before `git push` | Reminds Claude to ensure memory was committed |
 | Before `/clear` or auto-compact | Saves memory before context is wiped |
 | Session ends (Ctrl+C) | Extracts basic summary from transcript as fallback |
 
