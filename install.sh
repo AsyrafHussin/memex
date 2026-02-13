@@ -1,6 +1,6 @@
 #!/bin/bash
-# memex - Lightweight persistent memory for AI coding sessions
-# Usage: curl -fsSL https://raw.githubusercontent.com/asyrafhussin/memex/main/install.sh | bash
+# memex - Lightweight persistent memory for Claude Code sessions
+# Usage: curl -fsSL https://raw.githubusercontent.com/AsyrafHussin/memex/main/install.sh | bash
 
 set -e
 
@@ -31,24 +31,21 @@ EOF
   echo "memex: Created $MEMEX_DIR/latest.md"
 fi
 
-# Add ## NOW section to MEMORY.md if it exists but doesn't have it
-if [ -f "MEMORY.md" ]; then
-  if ! grep -q "## NOW" MEMORY.md; then
-    # Prepend NOW section
-    TEMP=$(mktemp)
-    cat > "$TEMP" << 'EOF'
+# Add ## NOW section to CLAUDE.md (auto-loaded by Claude Code)
+if [ -f "CLAUDE.md" ]; then
+  if ! grep -q "## NOW" CLAUDE.md; then
+    # Append NOW section
+    cat >> CLAUDE.md << 'EOF'
+
 ## NOW
 - Done: (not started)
 - Next: (first task)
 - See: memory/latest.md
-
 EOF
-    cat MEMORY.md >> "$TEMP"
-    mv "$TEMP" MEMORY.md
-    echo "memex: Added ## NOW section to MEMORY.md"
+    echo "memex: Added ## NOW section to CLAUDE.md"
   fi
 else
-  echo "memex: No MEMORY.md found. Create one with your project context."
+  echo "memex: No CLAUDE.md found. The ## NOW section will be added when you create one."
 fi
 
-echo "memex: Done! Use /memex:save before pushing to persist session memory."
+echo "memex: Done! Use /memex:save before ending a session to persist memory."

@@ -142,17 +142,6 @@ Or use the interactive UI:
 /plugin marketplace remove memex
 ```
 
-## Comparison
-
-| | claude-mem | memex |
-|---|---|---|
-| Dependencies | SQLite, Bun, Chroma, Node, Python | **None** |
-| Storage | Database (~/.claude-mem/) | Markdown files (in your repo) |
-| Token cost | 500+ per session | ~50 lines |
-| Install | Complex multi-step | One command |
-| Git tracked | No | **Yes** (travels with repo) |
-| Offline | Needs worker service | **Always works** |
-
 ## Plugin Components
 
 | Component | Path | Purpose |
