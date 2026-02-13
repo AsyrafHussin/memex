@@ -1,0 +1,13 @@
+{
+  "name": "memex",
+  "description": "Lightweight persistent memory for AI coding sessions. Zero dependencies, just markdown files.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Asyraf Hussin"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/asyrafhussin/memex"
+  },
+  "license": "MIT"
+}

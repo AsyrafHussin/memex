@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f memory/latest.md ]; then echo '--- MEMEX: Session Memory ---'; cat memory/latest.md; echo '--- END MEMEX ---'; else echo 'MEMEX: No previous session memory found. Start working and use /memex:save before pushing.'; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
