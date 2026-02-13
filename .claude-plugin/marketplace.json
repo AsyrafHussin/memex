@@ -6,22 +6,14 @@
   },
   "metadata": {
     "description": "Lightweight persistent memory plugin for Claude Code. Zero dependencies, just markdown.",
-    "version": "0.1.0"
+    "homepage": "https://github.com/AsyrafHussin/memex"
   },
   "plugins": [
     {
       "name": "memex",
-      "source": ".",
+      "source": "./plugin",
       "description": "Lightweight persistent memory plugin for Claude Code. Zero dependencies, just markdown.",
-      "version": "0.1.0",
-      "author": {
-        "name": "Asyraf Hussin",
-        "url": "https://github.com/AsyrafHussin"
-      },
-      "repository": "https://github.com/AsyrafHussin/memex",
-      "license": "MIT",
-      "keywords": ["memory", "session", "context", "persistent"],
-      "category": "productivity"
+      "version": "0.1.0"
     }
   ]
 }
