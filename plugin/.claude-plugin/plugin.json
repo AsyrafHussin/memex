@@ -1,7 +1,7 @@
 {
   "name": "memex",
   "description": "Lightweight persistent memory plugin for Claude Code. Zero dependencies, just markdown.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "Asyraf Hussin",
     "url": "https://github.com/AsyrafHussin"
