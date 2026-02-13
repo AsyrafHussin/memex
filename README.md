@@ -1,6 +1,6 @@
 # memex
 
-Lightweight persistent memory for AI coding sessions. Zero dependencies, just markdown files.
+Lightweight persistent memory plugin for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Zero dependencies, just markdown files.
 
 ## The Problem
 
@@ -17,47 +17,77 @@ Total overhead: ~50 lines. No database. No dependencies. No runtime.
 
 ## Install
 
-### As a Claude Code Plugin
+### As a Claude Code Plugin (Recommended)
 
-```bash
-# From marketplace (coming soon)
-/plugin marketplace add asyrafhussin/memex
-/plugin install memex
+**Step 1:** Add the marketplace
 
-# Or test locally
-claude --plugin-dir /path/to/memex
+```
+/plugin marketplace add AsyrafHussin/memex
 ```
 
-### Standalone (any project)
+**Step 2:** Install the plugin
+
+```
+/plugin install memex@memex
+```
+
+You can choose the scope during install:
+
+| Scope | Flag | Use Case |
+|-------|------|----------|
+| User (default) | `--scope user` | All your projects |
+| Project | `--scope project` | Shared with team via git |
+| Local | `--scope local` | This project only, gitignored |
+
+**Step 3:** Restart Claude Code. The plugin is now active.
+
+### Standalone (Without Plugin System)
+
+If you prefer not to use the plugin system, run this in your project root:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/asyrafhussin/memex/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/AsyrafHussin/memex/main/install.sh | bash
 ```
+
+This creates `memory/latest.md` and adds a `## NOW` section to your `MEMORY.md`.
 
 ## Usage
 
-### Automatic
+### Automatic (Plugin Mode)
 
-The plugin auto-reads `memory/latest.md` at session start. When you push code, the memory-protocol skill reminds Claude to save state.
+When installed as a plugin:
 
-### Manual
+1. **Session start** — The hook automatically reads `memory/latest.md` and shows you what was last done and what's next
+2. **Before pushing** — The `memory-protocol` skill reminds Claude to save session state
+
+### Commands
 
 ```
-/memex:save      Save current session state
+/memex:save      Save current session state to memory
 /memex:status    Show what was done and what's next
 ```
+
+### Standalone Mode
+
+Without the plugin, just tell Claude:
+
+> "Read memory/latest.md and continue where we left off"
+
+And before ending a session:
+
+> "Save session state to memory/latest.md and update MEMORY.md ## NOW"
 
 ## How It Works
 
 ```
-Session 1: Work on features → /memex:save → pushes code + memory files
-                                    ↓
+Session 1: Work on features -> /memex:save -> commit + push
+                                    |
                             memory/latest.md updated
                             MEMORY.md ## NOW updated
-                                    ↓
-Session 2: Starts → hook reads latest.md → Claude knows exactly where you left off
-                                    ↓
-                            "Last session you completed X. Next up is Y. Proceed?"
+                                    |
+Session 2: Starts -> hook reads latest.md -> Claude knows where you left off
+                                    |
+                            "Last session you completed X. Next up is Y."
 ```
 
 ## File Structure
@@ -65,8 +95,8 @@ Session 2: Starts → hook reads latest.md → Claude knows exactly where you le
 ```
 your-project/
   memory/
-    latest.md          ← overwritten each session (what happened, what's next)
-  MEMORY.md            ← project knowledge + ## NOW status (auto-loaded)
+    latest.md          <- overwritten each session (what happened, what's next)
+  MEMORY.md            <- project knowledge + ## NOW status (auto-loaded)
 ```
 
 ## What Gets Saved
@@ -88,6 +118,30 @@ your-project/
 - Migration ordering: FK tables must be created before referencing tables
 ```
 
+## Update
+
+### Update the Plugin
+
+To get the latest version:
+
+```
+/plugin marketplace update memex
+/plugin update memex@memex
+```
+
+Or use the interactive UI:
+
+1. Run `/plugin`
+2. Go to **Marketplaces** tab
+3. Click **Update** on the memex marketplace
+
+### Uninstall
+
+```
+/plugin uninstall memex@memex
+/plugin marketplace remove memex
+```
+
 ## Comparison
 
 | | claude-mem | memex |
@@ -96,8 +150,19 @@ your-project/
 | Storage | Database (~/.claude-mem/) | Markdown files (in your repo) |
 | Token cost | 500+ per session | ~50 lines |
 | Install | Complex multi-step | One command |
-| Git tracked | No | Yes (travels with repo) |
-| Offline | Needs worker service | Always works |
+| Git tracked | No | **Yes** (travels with repo) |
+| Offline | Needs worker service | **Always works** |
+
+## Plugin Components
+
+| Component | Path | Purpose |
+|-----------|------|---------|
+| Manifest | `.claude-plugin/plugin.json` | Plugin metadata |
+| Hook | `hooks/hooks.json` | Auto-reads memory on session start |
+| Command | `commands/save.md` | `/memex:save` — save session state |
+| Command | `commands/status.md` | `/memex:status` — show current state |
+| Skill | `skills/memory-protocol/SKILL.md` | Auto-save before push |
+| Templates | `templates/memory/` | Default file templates |
 
 ## Configuration
 
