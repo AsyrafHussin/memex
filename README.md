@@ -17,39 +17,12 @@ Total overhead: ~50 lines. No database. No dependencies. No runtime.
 
 ## Install
 
-### As a Claude Code Plugin (Recommended)
-
-**Step 1:** Add the marketplace
-
 ```
 /plugin marketplace add AsyrafHussin/memex
-```
-
-**Step 2:** Install the plugin
-
-```
 /plugin install memex@memex
 ```
 
-You can choose the scope during install:
-
-| Scope | Flag | Use Case |
-|-------|------|----------|
-| User (default) | `--scope user` | All your projects |
-| Project | `--scope project` | Shared with team via git |
-| Local | `--scope local` | This project only, gitignored |
-
-**Step 3:** Restart Claude Code. The plugin is now active.
-
-### Standalone (Without Plugin System)
-
-If you prefer not to use the plugin system, run this in your project root:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/AsyrafHussin/memex/main/install.sh | bash
-```
-
-This creates `memory/latest.md` and adds a `## NOW` section to your `CLAUDE.md`.
+Restart Claude Code. The plugin auto-creates a `memory/` folder in your project on first save.
 
 ## How It Works — Fully Automatic
 
@@ -98,23 +71,14 @@ You can also save manually at any time:
 your-project/
   memory/
     latest.md          <- overwritten each session (what happened, what's next)
-  MEMORY.md            <- project knowledge + ## NOW status (auto-loaded)
 ```
 
 ## Update
-
-To get the latest version:
 
 ```
 /plugin marketplace update memex
 /plugin update memex@memex
 ```
-
-Or use the interactive UI:
-
-1. Run `/plugin`
-2. Go to **Marketplaces** tab
-3. Click **Update** on the memex marketplace
 
 ### Uninstall
 
@@ -123,32 +87,15 @@ Or use the interactive UI:
 /plugin marketplace remove memex
 ```
 
-## Plugin Components
+## Hooks
 
-| Component | Path | Purpose |
-|-----------|------|---------|
-| Manifest | `plugin/.claude-plugin/plugin.json` | Plugin metadata |
-| Hooks | `plugin/hooks/hooks.json` | 6 lifecycle hooks (see below) |
-| Command | `plugin/commands/save.md` | `/memex:save` — save session state |
-| Command | `plugin/commands/status.md` | `/memex:status` — show current state |
-| Skill | `plugin/skills/memory-protocol/SKILL.md` | Auto-save before push |
-| Scripts | `plugin/scripts/` | Hook scripts |
-
-### Hooks
-
-| Hook | Script | Trigger |
-|------|--------|---------|
-| `SessionStart` | `load-memory.sh` | New session or resume — loads previous memory |
-| `PreToolUse` (Bash) | `check-push.sh` | Detects `git push` — reminds to save first |
-| `PostToolUse` | `check-context.sh` | Every tool use — warns at 70% and 85% context |
-| `PreCompact` | `pre-compact.sh` | Before `/clear` or auto-compaction — urgent save |
-| `SessionEnd` | `session-end.sh` | Session exit — fallback transcript extraction |
-
-## Configuration
-
-No configuration needed. It just works.
-
-If you want to customize the memory format, edit the templates in `plugin/templates/memory/`.
+| Hook | Trigger |
+|------|---------|
+| `SessionStart` | New session or resume — loads previous memory |
+| `PreToolUse` (Bash) | Detects `git push` — reminds to save first |
+| `PostToolUse` | Every tool use — warns at 70% and 85% context |
+| `PreCompact` | Before `/clear` or auto-compaction — urgent save |
+| `SessionEnd` | Session exit — fallback transcript extraction |
 
 ## License
 

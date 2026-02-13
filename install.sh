@@ -4,16 +4,12 @@
 
 set -e
 
-MEMEX_DIR="memory"
-
 echo "memex: Setting up session memory..."
 
-# Create memory directory
-mkdir -p "$MEMEX_DIR"
+mkdir -p memory
 
-# Create latest.md if not exists
-if [ ! -f "$MEMEX_DIR/latest.md" ]; then
-  cat > "$MEMEX_DIR/latest.md" << 'EOF'
+if [ ! -f "memory/latest.md" ]; then
+  cat > "memory/latest.md" << 'EOF'
 ## Session (not started)
 
 ### Completed
@@ -28,24 +24,9 @@ if [ ! -f "$MEMEX_DIR/latest.md" ]; then
 ### Gotchas
 - None yet
 EOF
-  echo "memex: Created $MEMEX_DIR/latest.md"
-fi
-
-# Add ## NOW section to CLAUDE.md (auto-loaded by Claude Code)
-if [ -f "CLAUDE.md" ]; then
-  if ! grep -q "## NOW" CLAUDE.md; then
-    # Append NOW section
-    cat >> CLAUDE.md << 'EOF'
-
-## NOW
-- Done: (not started)
-- Next: (first task)
-- See: memory/latest.md
-EOF
-    echo "memex: Added ## NOW section to CLAUDE.md"
-  fi
+  echo "memex: Created memory/latest.md"
 else
-  echo "memex: No CLAUDE.md found. The ## NOW section will be added when you create one."
+  echo "memex: memory/latest.md already exists, skipping"
 fi
 
-echo "memex: Done! Use /memex:save before ending a session to persist memory."
+echo "memex: Done! Memory will be saved automatically by the plugin."
