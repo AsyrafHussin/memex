@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.5] - 2026-02-14
+
+### Fixed
+- **CRITICAL**: PreToolUse hook was using `additionalContext` output format which only works for `UserPromptSubmit` hooks — output was silently ignored
+- Now uses `hookSpecificOutput.permissionDecision: "deny"` to actually BLOCK git commit/push until memory is updated
+- Smart detection: allows commit if memory/latest.md is already staged, denies if not
+- Push check: verifies memory/latest.md was in the last commit before allowing push
+
 ## [0.2.4] - 2026-02-14
 
 ### Fixed
