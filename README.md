@@ -31,8 +31,6 @@ Once installed, memex runs automatically with **no manual steps required**:
 | When | What Happens |
 |------|-------------|
 | Session starts | Reads `memory/latest.md` and restores context |
-| Context reaches 70% | Warns Claude to save memory soon |
-| Context reaches 85% | Urgent warning — Claude saves immediately |
 | Before `git push` | Intercepts and reminds Claude to save first |
 | Before `/clear` or auto-compact | Saves memory before context is wiped |
 | Session ends (Ctrl+C) | Extracts basic summary from transcript as fallback |
@@ -91,9 +89,8 @@ your-project/
 
 | Hook | Trigger |
 |------|---------|
-| `SessionStart` | New session or resume — loads previous memory |
+| `SessionStart` | New session, resume, `/clear`, or auto-compact — loads previous memory |
 | `PreToolUse` (Bash) | Detects `git push` — reminds to save first |
-| `PostToolUse` | Every tool use — warns at 70% and 85% context |
 | `PreCompact` | Before `/clear` or auto-compaction — urgent save |
 | `SessionEnd` | Session exit — fallback transcript extraction |
 
