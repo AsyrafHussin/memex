@@ -20,6 +20,26 @@
             "statusMessage": "Loading session memory..."
           }
         ]
+      },
+      {
+        "matcher": "clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/load-memory.sh\"",
+            "statusMessage": "Loading session memory..."
+          }
+        ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/load-memory.sh\"",
+            "statusMessage": "Loading session memory..."
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -29,16 +49,6 @@
           {
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/check-push.sh\""
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/check-context.sh\""
           }
         ]
       }

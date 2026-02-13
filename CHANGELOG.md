@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.3] - 2026-02-14
+
+### Fixed
+- SessionStart hook now fires after `/clear` and auto-compaction (added "clear" and "compact" matchers)
+- Fixed stdin consumption bug — `debug-stdin.sh` was chained with `&&` and consumed all stdin, starving `check-push.sh` and `pre-compact.sh`
+- Removed dead `PostToolUse` hook (`context_window` data not available in hook stdin)
+- `pre-compact.sh` now drains stdin properly to prevent pipe issues
+
+### Changed
+- Debug logging is now inline in each script, controlled by `MEMEX_DEBUG` env var
+- Removed `debug-stdin.sh` from hook chains
+
 ## [0.2.2] - 2026-02-14
 
 ### Added
