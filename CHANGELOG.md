@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.2] - 2026-02-14
+
+### Added
+- Auto-create `memory/` folder and default `latest.md` on first session start
+
 ## [0.2.1] - 2026-02-13
 
 ### Changed
