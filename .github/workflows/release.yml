@@ -3,6 +3,7 @@ name: Release
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   release:
@@ -21,16 +22,18 @@ jobs:
       - name: Check if version changed
         id: check
         run: |
-          git diff HEAD~1 -- .claude-plugin/marketplace.json | grep -q '"version"' && echo "changed=true" >> $GITHUB_OUTPUT || echo "changed=false" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            git diff HEAD~1 -- .claude-plugin/marketplace.json | grep -q '"version"' && echo "changed=true" >> $GITHUB_OUTPUT || echo "changed=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Get changelog entry
         if: steps.check.outputs.changed == 'true'
         id: changelog
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          # Extract changelog for this version
           BODY=$(awk "/^## \[$VERSION\]/{flag=1; next} /^## \[/{flag=0} flag" CHANGELOG.md)
-          # Handle multiline output
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "body<<$EOF" >> $GITHUB_OUTPUT
           echo "$BODY" >> $GITHUB_OUTPUT
