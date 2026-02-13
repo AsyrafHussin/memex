@@ -49,54 +49,28 @@ If you prefer not to use the plugin system, run this in your project root:
 curl -fsSL https://raw.githubusercontent.com/AsyrafHussin/memex/main/install.sh | bash
 ```
 
-This creates `memory/latest.md` and adds a `## NOW` section to your `MEMORY.md`.
+This creates `memory/latest.md` and adds a `## NOW` section to your `CLAUDE.md`.
 
-## Usage
+## How It Works — Fully Automatic
 
-### Automatic (Plugin Mode)
+Once installed, memex runs automatically with **no manual steps required**:
 
-When installed as a plugin:
-
-1. **Session start** — The hook automatically reads `memory/latest.md` and shows you what was last done and what's next
-2. **Before pushing** — The `memory-protocol` skill reminds Claude to save session state
+| When | What Happens |
+|------|-------------|
+| Session starts | Reads `memory/latest.md` and restores context |
+| Context reaches 70% | Warns Claude to save memory soon |
+| Context reaches 85% | Urgent warning — Claude saves immediately |
+| Before `git push` | Intercepts and reminds Claude to save first |
+| Before `/clear` or auto-compact | Saves memory before context is wiped |
+| Session ends (Ctrl+C) | Extracts basic summary from transcript as fallback |
 
 ### Commands
+
+You can also save manually at any time:
 
 ```
 /memex:save      Save current session state to memory
 /memex:status    Show what was done and what's next
-```
-
-### Standalone Mode
-
-Without the plugin, just tell Claude:
-
-> "Read memory/latest.md and continue where we left off"
-
-And before ending a session:
-
-> "Save session state to memory/latest.md and update MEMORY.md ## NOW"
-
-## How It Works
-
-```
-Session 1: Work on features -> /memex:save -> commit + push
-                                    |
-                            memory/latest.md updated
-                            MEMORY.md ## NOW updated
-                                    |
-Session 2: Starts -> hook reads latest.md -> Claude knows where you left off
-                                    |
-                            "Last session you completed X. Next up is Y."
-```
-
-## File Structure
-
-```
-your-project/
-  memory/
-    latest.md          <- overwritten each session (what happened, what's next)
-  MEMORY.md            <- project knowledge + ## NOW status (auto-loaded)
 ```
 
 ## What Gets Saved
@@ -118,9 +92,16 @@ your-project/
 - Migration ordering: FK tables must be created before referencing tables
 ```
 
-## Update
+## File Structure
 
-### Update the Plugin
+```
+your-project/
+  memory/
+    latest.md          <- overwritten each session (what happened, what's next)
+  MEMORY.md            <- project knowledge + ## NOW status (auto-loaded)
+```
+
+## Update
 
 To get the latest version:
 
@@ -146,18 +127,28 @@ Or use the interactive UI:
 
 | Component | Path | Purpose |
 |-----------|------|---------|
-| Manifest | `.claude-plugin/plugin.json` | Plugin metadata |
-| Hook | `hooks/hooks.json` | Auto-reads memory on session start |
-| Command | `commands/save.md` | `/memex:save` — save session state |
-| Command | `commands/status.md` | `/memex:status` — show current state |
-| Skill | `skills/memory-protocol/SKILL.md` | Auto-save before push |
-| Templates | `templates/memory/` | Default file templates |
+| Manifest | `plugin/.claude-plugin/plugin.json` | Plugin metadata |
+| Hooks | `plugin/hooks/hooks.json` | 6 lifecycle hooks (see below) |
+| Command | `plugin/commands/save.md` | `/memex:save` — save session state |
+| Command | `plugin/commands/status.md` | `/memex:status` — show current state |
+| Skill | `plugin/skills/memory-protocol/SKILL.md` | Auto-save before push |
+| Scripts | `plugin/scripts/` | Hook scripts |
+
+### Hooks
+
+| Hook | Script | Trigger |
+|------|--------|---------|
+| `SessionStart` | `load-memory.sh` | New session or resume — loads previous memory |
+| `PreToolUse` (Bash) | `check-push.sh` | Detects `git push` — reminds to save first |
+| `PostToolUse` | `check-context.sh` | Every tool use — warns at 70% and 85% context |
+| `PreCompact` | `pre-compact.sh` | Before `/clear` or auto-compaction — urgent save |
+| `SessionEnd` | `session-end.sh` | Session exit — fallback transcript extraction |
 
 ## Configuration
 
 No configuration needed. It just works.
 
-If you want to customize the memory format, edit the templates in `templates/memory/`.
+If you want to customize the memory format, edit the templates in `plugin/templates/memory/`.
 
 ## License
 
